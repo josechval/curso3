@@ -37,9 +37,11 @@ def fetch_data_robustly(tickers, start, end):
     for ticker in tickers:
         try:
             print(f"Downloading data for {ticker}...")
-            df = yf.download(ticker, start=start, end=end)
+            df = yf.download(ticker, start=start, end=end, auto_adjust=False)
             if not df.empty and 'Adj Close' in df.columns:
-                 data_list.append(df['Adj Close'].to_frame(name=ticker))
+                 adj_close = df['Adj Close']
+                 adj_close.name = ticker
+                 data_list.append(adj_close)
             else:
                 print(f"Warning: No or incomplete data found for {ticker}. Skipping.")
         except Exception as e:
